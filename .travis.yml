@@ -1,0 +1,7 @@
+language: swift
+os: osx
+osx_image: xcode9.3
+install:
+    - export TOOLCHAIN=swift
+build: swift test
+
