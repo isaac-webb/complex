@@ -67,12 +67,89 @@ final class ComplexTests: XCTestCase {
         XCTAssertEqual(z.imag, 1, accuracy: tolerance)
     }
     
+    // Test the custom debug string
+    func testDebugString() {
+        var z = Complex(real: 1, imag: 0)
+        XCTAssertEqual(z.debugDescription, "1.0 + 0.0j")
+        z.imag = 1
+        z.real = -1
+        XCTAssertEqual(z.debugDescription, "-1.0 + 1.0j")
+        z.imag = -1
+        XCTAssertEqual(z.debugDescription, "-1.0 - 1.0j")
+    }
+    
+    // Test the equality operator
+    func testEquality() {
+        let z1 = Complex(real: 1, imag: 1)
+        var z2 = Complex(real: 1, imag: -1)
+        XCTAssert(z1 != z2)
+        z2.imag = 1
+        XCTAssert(z1 == z2)
+    }
+    
+    // Test initialization by an integer
+    func testIntegerLiteral() {
+        let z: Complex = 1
+        XCTAssertEqual(z.real, 1)
+        XCTAssertEqual(z.imag, 0)
+    }
+    
+    // Test exactly initialization
+//    func testExactly() {
+//        let z = Complex(exactly: 1) ?? 0
+//        XCTAssertEqual(z.real, 1)
+//        XCTAssertEqual(z.imag, 0)
+//    }
+    
+    // Test addition operator
+    func testAddition() {
+        let z1 = Complex(real: 1, imag: 2)
+        let z2 = Complex(real: 3, imag: 4)
+        let z3 = z1 + z2
+        XCTAssertEqual(z3.real, 4)
+        XCTAssertEqual(z3.imag, 6)
+    }
+    
+    // Test mutating addition operator
+    func testMutatingAddition() {
+        var z1 = Complex(real: 1, imag: 2)
+        let z2 = Complex(real: -2, imag: -1)
+        z1 += z2
+        XCTAssertEqual(z1.real, -1)
+        XCTAssertEqual(z1.imag, 1)
+    }
+    
+    // Test subtraction operator
+    func testSubtraction() {
+        let z1 = Complex(real: 1, imag: 2)
+        let z2 = Complex(real: 3, imag: 4)
+        let z3 = z1 - z2
+        XCTAssertEqual(z3.real, -2)
+        XCTAssertEqual(z3.imag, -2)
+    }
+    
+    // Test mutating subtraction operator
+    func testMutatingSubtraction() {
+        var z1 = Complex(real: 1, imag: 2)
+        let z2 = Complex(real: -2, imag: -1)
+        z1 -= z2
+        XCTAssertEqual(z1.real, 3)
+        XCTAssertEqual(z1.imag, 3)
+    }
+    
     static var allTests = [
         ("testRealImagConstructor", testRealImagConstructor),
         ("testPolarConstructor", testPolarConstructor),
         ("testMagnitudePropertyGetter", testMagnitudePropertyGetter),
         ("testMagnitudePropertySetter", testMagnitudePropertySetter),
         ("testAnglePropertyGetter", testAnglePropertyGetter),
-        ("testAnglePropertySetter", testAnglePropertySetter)
+        ("testAnglePropertySetter", testAnglePropertySetter),
+        ("testDebugString", testDebugString),
+        ("testEquality", testEquality),
+        ("testIntegerLiteral", testIntegerLiteral),
+        ("testAddition", testAddition),
+        ("testMutatingAddition", testMutatingAddition),
+        ("testSubtraction", testSubtraction),
+        ("testMutatingSubtraction", testMutatingSubtraction)
     ]
 }
