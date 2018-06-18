@@ -19,7 +19,7 @@ public struct Complex: Equatable, Hashable, Codable {
         }
         set {
             // Capture the number's current polar angle and ensure no arithmetic errors will occur
-            let angle = abs(self.angle) <= Double.pi ? self.angle : 0
+            let angle = self.angle
             real = newValue * cos(angle)
             imag = newValue * sin(angle)
         }
@@ -27,8 +27,18 @@ public struct Complex: Equatable, Hashable, Codable {
     
     public var angle: Double {
         get {
+            // Test edge case
+            if imag == 0 && real == 0 {
+                return 0
+            }
+            
+            // Calculate the angle
             let angle = atan(imag / real)
-            return abs(angle) <= Double.pi ? angle : 0
+            if real < 0 {
+                return imag > 0 ? angle + Double.pi : angle - Double.pi
+            } else {
+                return angle
+            }
         }
         set {
             let magnitude = self.magnitude
@@ -51,6 +61,19 @@ public struct Complex: Equatable, Hashable, Codable {
     // Returns the conjugate of the complex number
     public func conjugate() -> Complex {
         return Complex(real: real, imag: -imag)
+    }
+    
+    // Implement the division operators
+    public static func / (lhs: Complex, rhs: Complex) -> Complex {
+        let magnitude = lhs.magnitude / rhs.magnitude
+        let angle = lhs.angle - rhs.angle
+        return Complex(magnitude: magnitude, angle: angle)
+    }
+    
+    // Implement the division operators
+    public static func /= (lhs: inout Complex, rhs: Complex) {
+        lhs.magnitude /= rhs.magnitude
+        lhs.angle -= rhs.angle
     }
 }
 

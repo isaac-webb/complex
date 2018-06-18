@@ -52,6 +52,12 @@ final class ComplexTests: XCTestCase {
         XCTAssertEqual(z.angle, 0, accuracy: tolerance)
         z.imag = 1
         XCTAssertEqual(z.angle, Double.pi / 4, accuracy: tolerance)
+        z.real = -1
+        XCTAssertEqual(z.angle, 3 * Double.pi / 4, accuracy: tolerance)
+        z.imag = -1
+        XCTAssertEqual(z.angle, -3 * Double.pi / 4, accuracy: tolerance)
+        z.real = 1
+        XCTAssertEqual(z.angle, -Double.pi / 4, accuracy: tolerance)
     }
     
     // Test the computed magnitude property setter
@@ -196,6 +202,24 @@ final class ComplexTests: XCTestCase {
         XCTAssertEqual(z1.imag, -5)
     }
     
+    // Test division operator
+    func testDivision() {
+        let z1 = Complex(real: 3, imag: 5)
+        let z2 = Complex(real: 2, imag: 6)
+        let z3 = z1 / z2
+        XCTAssertEqual(z3.real, 0.9, accuracy: tolerance)
+        XCTAssertEqual(z3.imag, -0.2, accuracy: tolerance)
+    }
+    
+    // Test mutating division operator
+    func testMutatingDivision() {
+        var z1 = Complex(real: 3, imag: -2)
+        let z2 = Complex(real: -3, imag: 2)
+        z1 /= z2
+        XCTAssertEqual(z1.real, -1, accuracy: tolerance)
+        XCTAssertEqual(z1.imag, 0, accuracy: tolerance)
+    }
+    
     // Test the easier imaginary number
     func testDoubleImaginary() {
         let z = 1.j
@@ -223,6 +247,8 @@ final class ComplexTests: XCTestCase {
         ("testMutatingSubtraction", testMutatingSubtraction),
         ("testMultiplication", testMultiplication),
         ("testMutatingMultiplication", testMutatingMultiplication),
+        ("testDivision", testDivision),
+        ("testMutatingDivision", testMutatingDivision),
         ("testDoubleImaginary", testDoubleImaginary)
     ]
 }
