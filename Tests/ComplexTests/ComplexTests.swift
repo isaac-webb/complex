@@ -2,6 +2,7 @@ import XCTest
 @testable import Complex
 
 final class ComplexTests: XCTestCase {
+    // Tolerance for comparing floating point values, fixing inaccuracy of trig functions
     let tolerance = 1e-5
     
     // Test the default constructor for a complex number
@@ -67,15 +68,31 @@ final class ComplexTests: XCTestCase {
         XCTAssertEqual(z.imag, 1, accuracy: tolerance)
     }
     
-    // Test the custom debug string
-    func testDebugString() {
+    // Test the custom string representation
+    func testDescription() {
         var z = Complex(real: 1, imag: 0)
-        XCTAssertEqual(z.debugDescription, "1.0 + 0.0j")
+        XCTAssertEqual(String(describing: z), "1.0 + 0.0j")
         z.imag = 1
         z.real = -1
-        XCTAssertEqual(z.debugDescription, "-1.0 + 1.0j")
+        XCTAssertEqual(String(describing: z), "-1.0 + 1.0j")
         z.imag = -1
-        XCTAssertEqual(z.debugDescription, "-1.0 - 1.0j")
+        XCTAssertEqual(String(describing: z), "-1.0 - 1.0j")
+    }
+    
+    // Test the custom string constructor
+    func testStringConstructor() {
+        let z1 = Complex("1.0 + 0.0j")
+        XCTAssertNotNil(z1)
+        XCTAssertEqual(z1!.real, 1)
+        XCTAssertEqual(z1!.imag, 0)
+        let z2 = Complex("-1.0 + 1.0j")
+        XCTAssertNotNil(z2)
+        XCTAssertEqual(z2!.real, -1)
+        XCTAssertEqual(z2!.imag, 1)
+        let z3 = Complex("-1.0 - 1.0j")
+        XCTAssertNotNil(z3)
+        XCTAssertEqual(z3!.real, -1)
+        XCTAssertEqual(z3!.imag, -1)
     }
     
     // Test the equality operator
@@ -87,9 +104,26 @@ final class ComplexTests: XCTestCase {
         XCTAssert(z1 == z2)
     }
     
+    // Test the comparison operators
+    func testComparison() {
+        let z1 = Complex(real: 1, imag: 1)
+        var z2 = Complex(real: 1, imag: -1)
+        XCTAssert(!(z1 > z2))
+        XCTAssert(z1 >= z2)
+        z2.imag = 2
+        XCTAssert(z1 < z2)
+    }
+    
     // Test initialization by an integer
     func testIntegerLiteral() {
         let z: Complex = 1
+        XCTAssertEqual(z.real, 1)
+        XCTAssertEqual(z.imag, 0)
+    }
+    
+    // Test initialization by an integer
+    func testFloatLiteral() {
+        let z: Complex = 1.0
         XCTAssertEqual(z.real, 1)
         XCTAssertEqual(z.imag, 0)
     }
@@ -100,6 +134,13 @@ final class ComplexTests: XCTestCase {
 //        XCTAssertEqual(z.real, 1)
 //        XCTAssertEqual(z.imag, 0)
 //    }
+    
+    // Test negation operator
+    func testNegation() {
+        let z1 = Complex(real: 1, imag: 2)
+        XCTAssertEqual((-z1).real, -1)
+        XCTAssertEqual((-z1).imag, -2)
+    }
     
     // Test addition operator
     func testAddition() {
@@ -137,6 +178,31 @@ final class ComplexTests: XCTestCase {
         XCTAssertEqual(z1.imag, 3)
     }
     
+    // Test multiplication operator
+    func testMultiplication() {
+        let z1 = Complex(real: 1, imag: 2)
+        let z2 = Complex(real: 3, imag: 4)
+        let z3 = z1 * z2
+        XCTAssertEqual(z3.real, -5)
+        XCTAssertEqual(z3.imag, 10)
+    }
+    
+    // Test mutating multiplication operator
+    func testMutatingMultiplication() {
+        var z1 = Complex(real: 1, imag: 2)
+        let z2 = Complex(real: -2, imag: -1)
+        z1 *= z2
+        XCTAssertEqual(z1.real, 0)
+        XCTAssertEqual(z1.imag, -5)
+    }
+    
+    // Test the easier imaginary number
+    func testDoubleImaginary() {
+        let z = 1.j
+        XCTAssertEqual(z.real, 0)
+        XCTAssertEqual(z.imag, 1)
+    }
+    
     static var allTests = [
         ("testRealImagConstructor", testRealImagConstructor),
         ("testPolarConstructor", testPolarConstructor),
@@ -144,12 +210,19 @@ final class ComplexTests: XCTestCase {
         ("testMagnitudePropertySetter", testMagnitudePropertySetter),
         ("testAnglePropertyGetter", testAnglePropertyGetter),
         ("testAnglePropertySetter", testAnglePropertySetter),
-        ("testDebugString", testDebugString),
+        ("testDescription", testDescription),
+        ("testStringConstructor", testStringConstructor),
         ("testEquality", testEquality),
+        ("testComparison", testComparison),
         ("testIntegerLiteral", testIntegerLiteral),
+        ("testFloatLiteral", testFloatLiteral),
+        ("testNegation", testNegation),
         ("testAddition", testAddition),
         ("testMutatingAddition", testMutatingAddition),
         ("testSubtraction", testSubtraction),
-        ("testMutatingSubtraction", testMutatingSubtraction)
+        ("testMutatingSubtraction", testMutatingSubtraction),
+        ("testMultiplication", testMultiplication),
+        ("testMutatingMultiplication", testMutatingMultiplication),
+        ("testDoubleImaginary", testDoubleImaginary)
     ]
 }

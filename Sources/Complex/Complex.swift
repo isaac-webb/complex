@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Complex {
+public struct Complex: Equatable, Hashable, Codable {
     // Stored properties
     public var real, imag: Double
     
@@ -55,21 +55,32 @@ public struct Complex {
 }
 
 // Implement custom output string
-extension Complex : CustomDebugStringConvertible {
-    public var debugDescription: String {
+extension Complex: CustomStringConvertible {
+    public var description: String {
         return "\(real) \(imag >= 0 ? "+" : "-") \(imag.magnitude)j"
     }
 }
 
-// Implement equality operator
-extension Complex : Equatable {
-    public static func == (lhs: Complex, rhs: Complex) -> Bool {
-        return lhs.real == rhs.real && lhs.imag == rhs.imag
+// Implement creation from a string description
+extension Complex: LosslessStringConvertible {
+    public init?(_ description: String) {
+        // Split the string into the real, sign, and imaginary parts
+        let parts = description.split(separator: " ")
+        
+        // Attempt to create the components
+        if let real = Double(parts[0]), let imag = Double(parts[2].dropLast()) {
+            // Assign the parts, determining the sign of the imaginary part
+            self.real = real
+            self.imag = parts[1] == "+" ? imag : -imag
+        } else {
+            // One of the components failed, failing the initializer
+            return nil
+        }
     }
 }
 
 // Implement all basic arithmetic
-extension Complex : SignedNumeric {
+extension Complex: SignedNumeric {
     public typealias IntegerLiteralType = Double
     
     public init(integerLiteral value: Double) {
@@ -135,6 +146,23 @@ extension Complex : SignedNumeric {
         // Assign the result
         lhs.real = real
         lhs.imag = imag
+    }
+}
+
+// Implement float initialization
+extension Complex: ExpressibleByFloatLiteral {
+    public typealias FloatLiteralType = Double
+    
+    public init(floatLiteral value: Double) {
+        real = value
+        imag = 0
+    }
+}
+
+// Implement the comparison operators, using magnitude as the basis of comparison
+extension Complex: Comparable {
+    public static func < (lhs: Complex, rhs: Complex) -> Bool {
+        return lhs.magnitude < rhs.magnitude
     }
 }
 
