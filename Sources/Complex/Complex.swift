@@ -27,17 +27,21 @@ public struct Complex: Equatable, Hashable, Codable {
     
     public var angle: Double {
         get {
-            // Test edge case
-            if imag == 0 && real == 0 {
+            // Test edge cases, defaulting to typical calculation
+            switch (real, imag) {
+            case (0, 0):
                 return 0
-            }
-            
-            // Calculate the angle
-            let angle = atan(imag / real)
-            if real < 0 {
-                return imag > 0 ? angle + Double.pi : angle - Double.pi
-            } else {
-                return angle
+            case let (x, _) where imag == 0:
+                return x < 0 ? Double.pi : 0
+            case let (_, y) where real == 0:
+                return y < 0 ? -Double.pi / 2 : Double.pi / 2
+            default:
+                let angle = atan(imag / real)
+                if real < 0 {
+                    return imag > 0 ? angle + Double.pi : angle - Double.pi
+                } else {
+                    return angle
+                }
             }
         }
         set {

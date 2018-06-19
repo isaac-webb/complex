@@ -48,8 +48,15 @@ final class ComplexTests: XCTestCase {
         var z = Complex(real: 0, imag: 0)
         XCTAssertEqual(z.angle, 0, accuracy: tolerance)
         z.real = 1
-        z.imag = 0
         XCTAssertEqual(z.angle, 0, accuracy: tolerance)
+        z.real = -1
+        XCTAssertEqual(z.angle, Double.pi, accuracy: tolerance)
+        z.real = 0
+        z.imag = 1
+        XCTAssertEqual(z.angle, Double.pi / 2, accuracy: tolerance)
+        z.imag = -1
+        XCTAssertEqual(z.angle, -Double.pi / 2, accuracy: tolerance)
+        z.real = 1
         z.imag = 1
         XCTAssertEqual(z.angle, Double.pi / 4, accuracy: tolerance)
         z.real = -1
