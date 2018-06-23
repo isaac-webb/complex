@@ -67,6 +67,7 @@ public struct Complex: Equatable, Hashable, Codable {
         return Complex(real: real, imag: -imag)
     }
     
+    // TODO: Division by zero
     // Implement the division operators
     public static func / (lhs: Complex, rhs: Complex) -> Complex {
         let magnitude = lhs.magnitude / rhs.magnitude
@@ -93,6 +94,11 @@ extension Complex: LosslessStringConvertible {
     public init?(_ description: String) {
         // Split the string into the real, sign, and imaginary parts
         let parts = description.split(separator: " ")
+        
+        // Check for the proper number of parts in the array
+        guard parts.count == 3 else {
+            return nil
+        }
         
         // Attempt to create the components
         if let real = Double(parts[0]), let imag = Double(parts[2].dropLast()) {

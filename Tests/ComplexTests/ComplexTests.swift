@@ -3,7 +3,7 @@ import XCTest
 
 final class ComplexTests: XCTestCase {
     // Tolerance for comparing floating point values, fixing inaccuracy of trig functions
-    let tolerance = 1e-5
+    let tolerance = 1e-10
     
     // Test the default constructor for a complex number
     func testRealImagConstructor() {
@@ -81,6 +81,14 @@ final class ComplexTests: XCTestCase {
         XCTAssertEqual(z.imag, 1, accuracy: tolerance)
     }
     
+    // Test complex number conjugation
+    func testConjugate() {
+        let z = Complex(real: 1, imag: 1)
+        let conj = z.conjugate()
+        XCTAssertEqual(conj.real, 1)
+        XCTAssertEqual(conj.imag, -1)
+    }
+    
     // Test the custom string representation
     func testDescription() {
         var z = Complex(real: 1, imag: 0)
@@ -106,6 +114,10 @@ final class ComplexTests: XCTestCase {
         XCTAssertNotNil(z3)
         XCTAssertEqual(z3!.real, -1)
         XCTAssertEqual(z3!.imag, -1)
+        let z4 = Complex("abc")
+        XCTAssertNil(z4)
+        let z5 = Complex("1.0 + abcj")
+        XCTAssertNil(z5)
     }
     
     // Test the equality operator
@@ -241,6 +253,7 @@ final class ComplexTests: XCTestCase {
         ("testMagnitudePropertySetter", testMagnitudePropertySetter),
         ("testAnglePropertyGetter", testAnglePropertyGetter),
         ("testAnglePropertySetter", testAnglePropertySetter),
+        ("testConjugate", testConjugate),
         ("testDescription", testDescription),
         ("testStringConstructor", testStringConstructor),
         ("testEquality", testEquality),
@@ -256,6 +269,6 @@ final class ComplexTests: XCTestCase {
         ("testMutatingMultiplication", testMutatingMultiplication),
         ("testDivision", testDivision),
         ("testMutatingDivision", testMutatingDivision),
-        ("testDoubleImaginary", testDoubleImaginary)
+        ("testDoubleImaginary", testDoubleImaginary),
     ]
 }
