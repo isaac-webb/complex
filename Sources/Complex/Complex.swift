@@ -1,24 +1,19 @@
-//
-//  Complex.swift
-//
-//  Created by Isaac Webb on 5/25/18.
-//  Copyright © 2018 Isaac Webb. All rights reserved.
-//
-
 import Foundation
 
+// Structure that represents a complex number of the form a + bi.
 public struct Complex: Equatable, Hashable, Codable {
-    // Stored properties
+    // Stored properties.
     public var real, imag: Double
     
-    // Computed Properties
+    // Computed Properties.
     public var magnitude: Double {
         get {
-            // Get the complex number's magnitude
+            // Get the complex number's magnitude.
             return sqrt(real * real + imag * imag)
         }
         set {
-            // Capture the number's current polar angle and ensure no arithmetic errors will occur
+            // Capture the number's current polar angle and ensure no arithmetic
+            // errors will occur.
             let angle = self.angle
             real = newValue * cos(angle)
             imag = newValue * sin(angle)
@@ -27,7 +22,7 @@ public struct Complex: Equatable, Hashable, Codable {
     
     public var angle: Double {
         get {
-            // Test edge cases, defaulting to typical calculation
+            // Test edge cases, defaulting to typical calculation.
             switch (real, imag) {
             case (0, 0):
                 return 0
@@ -51,45 +46,45 @@ public struct Complex: Equatable, Hashable, Codable {
         }
     }
     
-    // Default constructor
+    // Default constructor.
     public init(real: Double = 0, imag: Double = 0) {
         self.real = real
         self.imag = imag
     }
     
-    // Allow creation of complex numbers using polar coordinates
+    // Allow creation of complex numbers using polar coordinates.
     public init(magnitude: Double, angle: Double) {
         self.init(real: magnitude * cos(angle), imag: magnitude * sin(angle))
     }
     
-    // Returns the conjugate of the complex number
+    // Returns the conjugate of the complex number.
     public func conjugate() -> Complex {
         return Complex(real: real, imag: -imag)
     }
     
     // TODO: Division by zero
-    // Implement the division operators
+    // Implement the division operators.
     public static func / (lhs: Complex, rhs: Complex) -> Complex {
         let magnitude = lhs.magnitude / rhs.magnitude
         let angle = lhs.angle - rhs.angle
         return Complex(magnitude: magnitude, angle: angle)
     }
     
-    // Implement the division operators
+    // Implement the division operators.
     public static func /= (lhs: inout Complex, rhs: Complex) {
         lhs.magnitude /= rhs.magnitude
         lhs.angle -= rhs.angle
     }
 }
 
-// Implement custom output string
+// Implement custom output string.
 extension Complex: CustomStringConvertible {
     public var description: String {
         return "\(real) \(imag >= 0 ? "+" : "-") \(imag.magnitude)j"
     }
 }
 
-// Implement creation from a string description
+// Implement creation from a string description.
 extension Complex: LosslessStringConvertible {
     public init?(_ description: String) {
         // Split the string into the real, sign, and imaginary parts
@@ -112,7 +107,7 @@ extension Complex: LosslessStringConvertible {
     }
 }
 
-// Implement all basic arithmetic
+// Implement all basic arithmetic.
 extension Complex: SignedNumeric {
     public typealias IntegerLiteralType = Double
     
@@ -122,12 +117,12 @@ extension Complex: SignedNumeric {
     }
     
     public init?<T>(exactly source: T) where T : BinaryInteger {
-        // Ensure the value can be converted to a double
+        // Ensure the value can be converted to a double.
         guard let val = Double(exactly: source) else {
             return nil
         }
         
-        // Assign the values
+        // Assign the values.
         real = val
         imag = 0
     }
@@ -137,7 +132,7 @@ extension Complex: SignedNumeric {
         let real = lhs.real + rhs.real
         let imag = lhs.imag + rhs.imag
         
-        // Return the result
+        // Return the result.
         return Complex(real: real, imag: imag)
     }
     
@@ -152,7 +147,7 @@ extension Complex: SignedNumeric {
         let real = lhs.real - rhs.real
         let imag = lhs.imag - rhs.imag
         
-        // Return the result
+        // Return the result.
         return Complex(real: real, imag: imag)
     }
     
@@ -167,7 +162,7 @@ extension Complex: SignedNumeric {
         let real = lhs.real * rhs.real - lhs.imag * rhs.imag
         let imag = lhs.real * rhs.imag + lhs.imag * rhs.real
         
-        // Return the result
+        // Return the result.
         return Complex(real: real, imag: imag)
     }
     
@@ -176,13 +171,13 @@ extension Complex: SignedNumeric {
         let real = lhs.real * rhs.real - lhs.imag * rhs.imag
         let imag = lhs.real * rhs.imag + lhs.imag * rhs.real
         
-        // Assign the result
+        // Assign the result.
         lhs.real = real
         lhs.imag = imag
     }
 }
 
-// Implement float initialization
+// Implement float initialization.
 extension Complex: ExpressibleByFloatLiteral {
     public typealias FloatLiteralType = Double
     
@@ -192,14 +187,14 @@ extension Complex: ExpressibleByFloatLiteral {
     }
 }
 
-// Implement the comparison operators, using magnitude as the basis of comparison
+// Implement the comparison operators using magnitude as basis.
 extension Complex: Comparable {
     public static func < (lhs: Complex, rhs: Complex) -> Bool {
         return lhs.magnitude < rhs.magnitude
     }
 }
 
-// Enable easier expression of complex numbers
+// Enable easier expression of complex numbers.
 extension Double {
     public var j: Complex {
         return Complex(real: 0, imag: self)
