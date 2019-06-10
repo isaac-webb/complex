@@ -1,7 +1,9 @@
 language: swift
 osx_image: xcode10.2
+before_script:
+  - swift package generate-xcodeproj
 script:
-  - swift test
+  - xcodebuild -project Complex.xcodeproj -scheme Complex-Package -enableCodeCoverage YES build test
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
