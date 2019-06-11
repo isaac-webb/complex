@@ -3,7 +3,6 @@ osx_image: xcode10.2
 before_script:
   - swift package generate-xcodeproj
 script:
-  - xcodebuild -project Complex.xcodeproj -scheme Complex-Package -enableCodeCoverage YES build test
+  - xcodebuild -quiet -project Complex.xcodeproj -scheme Complex-Package -sdk macosx -enableCodeCoverage YES test
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
-
+  - bash <(curl -s https://codecov.io/bash) -J '^Complex$' -F 'Complex'
